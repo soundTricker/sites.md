@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "sites.md",
+    "description": "Parsing a sites page as markdown."
+  },
+  "appDescription": {
+    "message": "Parsing the page of Google Sites as markdown",
+    "description": "The description of the application"
+  }
+}
