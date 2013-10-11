@@ -20,7 +20,6 @@ chrome.contextMenus.create
     "http://sites.google.com/*",
     "https://sites.google.com/*"
   ]
-  ,()-> console.log "hoge"
 
 chrome.runtime.onMessage.addListener (request, sender , callback)->
   return if request.cmd isnt 'updateValue'

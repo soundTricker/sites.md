@@ -26,8 +26,6 @@
       });
     },
     documentUrlPatterns: ["http://sites.google.com/*", "https://sites.google.com/*"]
-  }, function() {
-    return console.log("hoge");
   });
 
   chrome.runtime.onMessage.addListener(function(request, sender, callback) {
