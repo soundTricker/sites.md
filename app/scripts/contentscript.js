@@ -20,7 +20,7 @@
 
   toggle = function() {
     return $('.sites-layout-tile').each(function() {
-      var $dummy, $editable, $marked, $that, $toc, k, map, result, tocs, v;
+      var $dummy, $editable, $marked, $that, $toc, $tocContainter, $tocWrap, list, result, tree;
       $that = $(this);
       $editable = $that.find('.editable');
       if ($editable.length > 0) {
@@ -33,33 +33,68 @@
           $that.data('origin', $that.html());
         }
         result = marked($that[0].innerText);
-        map = {};
+        list = [];
         $marked = $("<div>" + result + "</div>");
         $marked.find("h1,h2,h3,h4").each(function(i) {
           var level;
           $(this).before($("<a>", {
             id: "md-header-" + i
           }));
-          level = this.tagName.replace(/h(\d+)/, "$1");
-          return map["md-header-" + i] = {
-            level: level,
-            title: $(this).text()
-          };
+          level = this.tagName.replace(/h(\d+)/i, "$1");
+          console.log(level);
+          return list.push({
+            level: parseInt(level),
+            title: $(this).text(),
+            id: "md-header-" + i
+          });
         });
         if (result.indexOf("[TOC]" >= 0)) {
           $dummy = $("<div>");
-          $toc = $("<ol>").appendTo($dummy);
-          tocs = ((function() {
-            var _results;
-            _results = [];
-            for (k in map) {
-              v = map[k];
-              _results.push("<li><a href=\"#" + k + "\" class=\"level-" + v.level + "\">" + v.title + "</a></li>");
+          $tocWrap = $('<div class="site-md-toc goog-toc"><a href="javascript:" class="site-md-toc-toggle">[TOC]</a></div>').appendTo($dummy);
+          $tocContainter = $('<div class="site-md-toc-container">').appendTo($tocWrap);
+          $toc = $("<ol>").appendTo($tocContainter);
+          tree = function($root, $before, beforeLevel, deeps, list, levelMap) {
+            var $li, $ol, c, currentDeeps, v, _ref, _ref1, _ref2;
+            v = list.shift();
+            if (!v) {
+              return;
             }
-            return _results;
-          })()).join("");
-          $toc.append($(tocs));
-          result = $marked.html().replace("[TOC]", "[TOC]<br/>" + $dummy.html());
+            $li = $("<li><a href=\"#" + v.id + "\" class=\"level-" + v.level + "\">" + v.title + "</a></li>");
+            currentDeeps = deeps;
+            if (v.level > beforeLevel || !$before) {
+              if (!$before) {
+                $root.append($li);
+                levelMap[v.level] = {
+                  $ol: $root,
+                  deeps: currentDeeps + 1
+                };
+              } else {
+                $ol = $("<ol>").append($li).appendTo($before);
+                levelMap[v.level] = {
+                  $ol: $ol,
+                  deeps: currentDeeps + 1
+                };
+              }
+              currentDeeps++;
+            } else if (v.level === beforeLevel) {
+              $before.parent().append($li);
+            } else {
+              $ol = (_ref = levelMap[v.level]) != null ? _ref.$ol : void 0;
+              deeps = (_ref1 = levelMap[v.level]) != null ? _ref1.deeps : void 0;
+              c = v.level;
+              while (!$ol && c > 0) {
+                _ref2 = levelMap[c--] != null, $ol = _ref2.$ol, deeps = _ref2.deeps;
+              }
+              if (!$ol) {
+                $ol = $root;
+              }
+              $ol.append($li);
+              currentDeeps = 1;
+            }
+            return tree($root, $li, v.level, currentDeeps, list, levelMap);
+          };
+          tree($toc, null, 0, 0, list, {});
+          result = $marked.html().replace("[TOC]", $dummy.html());
         }
         $that.html(result).addClass('marked');
       }
