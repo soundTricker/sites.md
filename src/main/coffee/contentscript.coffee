@@ -13,7 +13,7 @@ marked.setOptions
   langPrefix: 'lang-'
 
 toggle = ()->
-  $('.sites-layout-tile').each ()-> 
+  $('.sites-layout-tile').each ()->
     $that = $ @
 
     $editable = $that.find '.editable'
@@ -40,35 +40,38 @@ toggle = ()->
 
       if result.indexOf "[TOC]" >= 0
         $dummy = $ "<div>"
-        $toc = $("<ol>").appendTo $dummy
+        $tocWrap = $('<div class="site-md-toc goog-toc"><a href="javascript:" class="site-md-toc-toggle">[TOC]</a></div>').appendTo $dummy
+        $tocContainter = $('<div class="site-md-toc-container">').appendTo $tocWrap
+        $toc = $("<ol>").appendTo $tocContainter
 
         tree = ($root, $before, beforeLevel, deeps, list, levelMap)->
           v = list.shift()
-          console.log v, $before, beforeLevel, deeps, list
           return if !v
           $li = $("<li><a href=\"##{v.id}\" class=\"level-#{v.level}\">#{v.title}</a></li>")
           currentDeeps = deeps
           if v.level > beforeLevel or !$before
-            if v.level is 1
+            if !$before
               $root.append $li
-              levelMap[1] = ol : $root, deeps : currentDeeps + 1
+              levelMap[v.level] = {$ol : $root, deeps : currentDeeps + 1}
             else
               $ol = $("<ol>").append($li).appendTo $before
-              levelMap[v.level] = ol : $ol, deeps : currentDeeps + 1
+              levelMap[v.level] = {$ol : $ol, deeps : currentDeeps + 1}
             currentDeeps++
           else if v.level is beforeLevel
             $before.parent().append $li
           else
-            {$ol, currentDeeps} = levelMap[v.level]?
+            $ol = levelMap[v.level]?.$ol
+            deeps = levelMap[v.level]?.deeps
             c = v.level
-            while !$ol
-              {$ol, currentDeeps} = levelMap[c--]?
+            while !$ol and c > 0
+              {$ol, deeps} = levelMap[c--]?
+            $ol = $root if !$ol
             $ol.append $li
+            currentDeeps = 1
           tree $root, $li, v.level, currentDeeps, list, levelMap
 
         tree $toc, null, 0, 0, list, {}
-        console.log $toc
-        result = $marked.html().replace "[TOC]", "[TOC]<br/>" + $dummy.html()
+        result = $marked.html().replace "[TOC]", $dummy.html()
 
       $that.html(result).addClass 'marked'
 
@@ -78,7 +81,7 @@ shortcut.add "Meta+Shift+P", toggle
 shortcut.add "Ctrl+Shift+P", toggle
 
 
-$('.sites-layout-tile').each ()-> 
+$('.sites-layout-tile').each ()->
   $that = $ @
   $that.data 'origin' , $that.html()
 
