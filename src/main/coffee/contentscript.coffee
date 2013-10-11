@@ -27,19 +27,47 @@ toggle = ()->
       if $that.hasClass 'editable'
         $that.data 'origin' , $that.html()
       result = marked $that[0].innerText
-      map = {}
+      list = []
       $marked = $("<div>" + result + "</div>")
       $marked.find("h1,h2,h3,h4").each (i)->
         $(@).before $("<a>" , id : "md-header-#{i}")
-        level = @.tagName.replace /h(\d+)/ , "$1"
-        map["md-header-#{i}"] = level : level, title : $(@).text()
+        level = @.tagName.replace /h(\d+)/i , "$1"
+        console.log level
+        list.push
+          level : parseInt(level)
+          title : $(@).text()
+          id : "md-header-#{i}"
 
       if result.indexOf "[TOC]" >= 0
         $dummy = $ "<div>"
         $toc = $("<ol>").appendTo $dummy
 
-        tocs = ("<li><a href=\"##{k}\" class=\"level-#{v.level}\">#{v.title}</a></li>" for k, v of map).join ""
-        $toc.append $ tocs
+        tree = ($root, $before, beforeLevel, deeps, list, levelMap)->
+          v = list.shift()
+          console.log v, $before, beforeLevel, deeps, list
+          return if !v
+          $li = $("<li><a href=\"##{v.id}\" class=\"level-#{v.level}\">#{v.title}</a></li>")
+          currentDeeps = deeps
+          if v.level > beforeLevel or !$before
+            if v.level is 1
+              $root.append $li
+              levelMap[1] = ol : $root, deeps : currentDeeps + 1
+            else
+              $ol = $("<ol>").append($li).appendTo $before
+              levelMap[v.level] = ol : $ol, deeps : currentDeeps + 1
+            currentDeeps++
+          else if v.level is beforeLevel
+            $before.parent().append $li
+          else
+            {$ol, currentDeeps} = levelMap[v.level]?
+            c = v.level
+            while !$ol
+              {$ol, currentDeeps} = levelMap[c--]?
+            $ol.append $li
+          tree $root, $li, v.level, currentDeeps, list, levelMap
+
+        tree $toc, null, 0, 0, list, {}
+        console.log $toc
         result = $marked.html().replace "[TOC]", "[TOC]<br/>" + $dummy.html()
 
       $that.html(result).addClass 'marked'
