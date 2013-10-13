@@ -27,6 +27,9 @@ module.exports = (grunt) ->
     watch:
       options:
         spawn: false
+      jade:
+        files: ["<%= yeoman.src %>/jade/{,*/}*.jade"]
+        tasks: ["jade:dist"]
 
       coffee:
         files: ["<%= yeoman.src %>/coffee/{,*/}*.coffee"]
@@ -37,7 +40,7 @@ module.exports = (grunt) ->
         tasks: ["coffee:test"]
 
       compass:
-        files: ["<%= yeoman.app %>/styles/{,*/}*.{scss,sass}"]
+        files: ["<%= yeoman.src %>/sass/{,*/}*.{scss,sass}"]
         tasks: ["compass:server"]
 
     connect:
@@ -65,7 +68,17 @@ module.exports = (grunt) ->
       all:
         options:
           specs: "test/spec/{,*/}*.js"
-
+    jade:
+      dist:
+          options:
+            pretty: on
+          files: [
+            expand: true
+            cwd: "<%= yeoman.src %>/jade"
+            src: "{,*/}*.jade"
+            dest: "<%= yeoman.app %>/"
+            ext: ".html"
+          ]
     coffee:
       dist:
         files: [
@@ -87,7 +100,7 @@ module.exports = (grunt) ->
 
     compass:
       options:
-        sassDir: "<%= yeoman.app %>/styles"
+        sassDir: "<%= yeoman.src %>/sass"
         cssDir: "<%= yeoman.app %>/styles"
         generatedImagesDir: ".tmp/images/generated"
         imagesDir: "<%= yeoman.app %>/images"
@@ -192,7 +205,7 @@ module.exports = (grunt) ->
     concurrent:
       server: ["coffee:dist", "compass:server"]
       test: ["coffee", "compass"]
-      dist: ["coffee", "compass:dist", "imagemin", "svgmin", "htmlmin"]
+      dist: ["coffee","jade:dist","compass:dist", "imagemin", "svgmin", "htmlmin"]
 
     chromeManifest:
       dist:

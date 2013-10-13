@@ -1,27 +1,28 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>Sites.md</title>
-        <link href="bower_components/twitter/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link href="styles/main.css" rel="stylesheet">
-    </head>
-    <body width="500px">
-        <!-- CHROME EXTENSION POPUP -->
-        <div class="container">
-          <div class="row">
-            <div class="col-md-12">
-              <form class="form-inline" role="form">
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox" id="toggle"> Markdownized
-                  </label>
-                </div>
-              </form>
+  <head>
+    <title>Sites.md</title>
+    <link href="bower_components/twitter/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles/main.css" rel="stylesheet">
+  </head>
+  <body width="500px">
+    <!-- CHROME EXTENSION POPUP -->
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <form role="form" class="form-inline">
+            <div class="checkbox">
+              <label>
+                <input id="toggle" type="checkbox">Markdownized
+              </label>
             </div>
+          </form>
         </div>
-        <!-- build:js scripts/popup.js -->
-        <script src="bower_components/jquery/jquery.min.js"></script>
-        <script src="scripts/popup.js"></script>
-        <!-- endbuild -->
-    </body>
+      </div>
+    </div>
+    <!-- build:js scripts/popup.js -->
+    <script src="bower_components/jquery/jquery.min.js"></script>
+    <script src="scripts/popup.js"></script>
+    <!-- endbuild -->
+  </body>
 </html>

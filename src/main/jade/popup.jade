@@ -1,0 +1,20 @@
+!!! 5
+html
+  head
+    title Sites.md
+    link(href='bower_components/twitter/dist/css/bootstrap.min.css', rel='stylesheet')
+    link(href='styles/main.css', rel='stylesheet')
+  body(width='500px')
+    // CHROME EXTENSION POPUP 
+    .container
+      .row
+        .col-md-12
+          form.form-inline(role='form')
+            .checkbox
+              label
+                input#toggle(type='checkbox')
+                | Markdownized
+    // build:js scripts/popup.js 
+    script(src='bower_components/jquery/jquery.min.js')
+    script(src='scripts/popup.js')
+    // endbuild 
