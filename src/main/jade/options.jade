@@ -1,5 +1,5 @@
 !!! 5
-html
+html(ng-app="sites.md",ng-csp)
   head
     // build:css({.tmp,app}) css/app.css
     link(href='bower_components/bootstrap/docs/assets/css/bootstrap.css', rel='stylesheet')
@@ -7,12 +7,75 @@ html
     link(href='styles/options.css', rel='stylesheet')
     // endbuild
   body
+    .container(ng-controller="OptionsCtrl as main")
+      .hero-unit
+        h1 site.md
+      .row-fluid
+        .span12
+          h2 Auto marknized setting
+          p Managing Auto marknized setting. If you add new setting, that page is auto marknized at showing.
+          .row-fuild
+            .span12
+              .btn-toolbar
+                .btn-group
+                  button.btn.btn-mini(ng-disabled="!main.setting") copy
+                  button.btn.btn-danger.btn-mini(ng-disabled="!main.setting") delete
+          .row-fuild
+            .span12
+              {{main.includes}}
+              select.span12(ng-model="main.setting" , ng-options="setting.name for setting in main.settings", size=10)
+                option(value="") -- create a new auto marknized setting --
+        .span12
+          form.form-horizontal(name="settingForm")
+            fieldset
+              legend Setting {{settingForm}}
+              .control-group
+                label.control-label Name
+                .controls
+                  input.span12(type="text",name="name",ng-model="main.setting.name", placeholder="Set Auto maknized setting name", required)
+              .control-group
+                label.control-label Auto marknized or <br />
+                  | Does not marknized
+                .controls
+                  label.radio
+                    input(type="radio",name="auto", placeholder="placeholder", value="on",ng-model="main.setting.auto", checked)
+                    | Auto mirknized
+                  label.radio
+                    input(type="radio",name="auto", placeholder="placeholder", value="off",ng-model="main.setting.auto")
+                    | Ignore
+              .control-group
+                label.control-label Type
+                .controls
+                  select(name="type", ng-model="main.setting.type")
+                    option(value="url") URL
+                    option(value="contents") Contents
+              .control-group
+                label.control-label Expression
+                .controls(ng-show="main.setting.type == 'contents'")
+                  select(name="expressionType", ng-model="main.setting.expressionType")
+                    option(value="title") Title
+                    option(value="page_content") Page Content
+                  | contains
+                  input(type="text", placeholder="text", ng-model="main.setting.expressionText", required)
+                .controls(ng-show="main.setting.type == 'url'")
+                  | URL contains
+                  input(type="text", placeholder="text", ng-model="main.setting.expressionText", required)
+              .form-actions
+                button.btn Add
+                button.btn(type="cancel") Cancel
+
+
+
+
     // CHROME EXTENSION OPTION 
     // build:js scripts/options.js 
     script(type="text/javascript", src="bower_components/jquery/jquery.min.js")
     script(type="text/javascript", src="bower_components/angular-unstable/angular.min.js")
-    script(src="bower_components/angular-ui/build/angular-ui.min.js")
     script(src="bower_components/angular-ui-bootstrap-bower/ui-bootstrap-tpls.min.js")
     script(src="bower_components/angular-sanitize/angular-sanitize.js")
     script(src='scripts/options.js')
+
+    // controllers
+    script(src="scripts/controllers/options.js")
     // endbuild 
+    script(src="//localhost:35729/livereload.js")
