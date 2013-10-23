@@ -1,3 +1,24 @@
+settings = null
+
+$('.sites-layout-tile').each ()->
+  $that = $ @
+  $that.data 'origin' , $that.html()
+
+chrome.runtime.sendMessage {cmd : "get" , name : "settings"} , (result)->
+  settings = result
+  console.log arguments
+  return if !settings || !Array.isArray settings
+
+  check = (setting)->
+    return true if setting.type is "url" and location.href.indexOf setting.expressionText >= 0
+    return true if setting.expressionType is "title" && $("#sites-page-title-header").text().indexOf setting.expressionText
+    return $(".sites-layout-tile:contains('#{setting.expressionText}')").length > 0
+
+  return if settings
+  .filter((setting)->setting.auto is "off")
+  .some check
+
+  return toggle() if settings.filter((setting)->setting.auto is "on").some check
 
 marked.setOptions
   gfm: true
@@ -32,7 +53,6 @@ toggle = ()->
       $marked.find("h1,h2,h3,h4").each (i)->
         $(@).before $("<a>" , id : "md-header-#{i}")
         level = @.tagName.replace /h(\d+)/i , "$1"
-        console.log level
         list.push
           level : parseInt(level)
           title : $(@).text()
@@ -80,10 +100,6 @@ toggle = ()->
 shortcut.add "Meta+Shift+P", toggle
 shortcut.add "Ctrl+Shift+P", toggle
 
-
-$('.sites-layout-tile').each ()->
-  $that = $ @
-  $that.data 'origin' , $that.html()
 
 
 chrome.runtime.onMessage.addListener (request, sender , callback)->

@@ -30,7 +30,7 @@ module.exports = (grunt) ->
         spawn: false
       jade:
         files: ["<%= yeoman.src %>/jade/{,*/}*.jade"]
-        tasks: ["jade:dist"]
+        tasks: ["jade:local"]
       livereload:
         files: ["<%= yeoman.app%>/{,*/}*"]
         tasks: []
@@ -78,6 +78,18 @@ module.exports = (grunt) ->
         options:
           specs: "test/spec/{,*/}*.js"
     jade:
+      local:
+          options:
+            pretty: on
+            data :
+              livereload:on
+          files: [
+            expand: true
+            cwd: "<%= yeoman.src %>/jade"
+            src: "{,*/}*.jade"
+            dest: "<%= yeoman.app %>/"
+            ext: ".html"
+          ]
       dist:
           options:
             pretty: on

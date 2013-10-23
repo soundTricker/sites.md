@@ -10,9 +10,7 @@
     },
     "default_locale": "en",
     "background": {
-        "scripts": [
-            "scripts/background.js"
-        ]
+        "page":  "background.html"
     },
     "page_action": {
         "default_icon": {
@@ -22,7 +20,12 @@
         "default_title": "site.md",
         "default_popup": "popup.html"
     },
+  "web_accessible_resources": [
+    "bower_components/jquery-ui/themes/base/images/*",
+    "font/*"
+  ],
     "options_page": "options.html",
+    "content_security_policy": "script-src 'self' https://www.google-analytics.com http://localhost:35729; object-src 'self'",
     "content_scripts": [
         {
             "matches": [
@@ -46,6 +49,7 @@
     ],
     "permissions": [
         "tabs",
+        "storage",
         "activeTab",
         "contextMenus",
         "http://sites.google.com/*",
