@@ -1,0 +1,45 @@
+!!! 5
+html
+  head
+    title sites.md
+    meta(name="viewport",content="width=device-width, initial-scale=1.0")
+    // build:css({.tmp,app}) styles/popup.css
+    link(href='bower_components/bootstrap/docs/assets/css/bootstrap.css', rel='stylesheet')
+    link(href='bower_components/bootstrap/docs/assets/css/bootstrap-responsive.css', rel='stylesheet')
+    link(href='bower_components/font-awesome/css/font-awesome.min.css', rel='stylesheet')
+    // endbuild 
+  body(styles="margin:5px;")
+    // CHROME EXTENSION POPUP 
+    h3 sited.md
+    #container(style="width:400px")
+      .container-fluid
+        .row-fluid
+          #msgBox.span12(style="display:none;")
+            .alert
+
+
+        .row-fluid
+          .span12
+              ul.nav.nav-list.nav-pills.nav-stacked
+                li
+                  .checkbox
+                    label
+                      input#toggle(type='checkbox')
+                      | Markdownized
+                li
+                  a#saveAutoSetting(href="#")
+                    i.icon-save &nbsp;
+                    | Set this url as auto markdownized
+                li
+                  a#saveIgnoreSetting(href="#")
+                    i.icon-save &nbsp;
+                    | Set this url as non-auto markdownized
+                li.divider
+                li
+                  a#toOptionPageLink(target="_blank")
+                    i.icon-cog &nbsp;
+                    | Show option page
+    // build:js scripts/popup.js 
+    script(src='bower_components/jquery/jquery.min.js')
+    script(src='scripts/popup.js')
+    // endbuild 

@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "sites.md",
+    "description": "Google SitesのページをMarkdownとしてパースして表示します。"
+  },
+  "appDescription": {
+    "message": "Google SitesのページをMarkdownとしてパースして表示します。",
+    "description": "The description of the application"
+  }
+}
