@@ -26,8 +26,14 @@ module.exports = (grunt) ->
     yeoman: yeomanConfig
     watch:
       options:
+        livereload:on
         spawn: false
-
+      jade:
+        files: ["<%= yeoman.src %>/jade/{,*/}*.jade"]
+        tasks: ["jade:local"]
+      livereload:
+        files: ["<%= yeoman.app%>/{,*/}*"]
+        tasks: []
       coffee:
         files: ["<%= yeoman.src %>/coffee/{,*/}*.coffee"]
         tasks: ["coffee:dist"]
@@ -37,7 +43,7 @@ module.exports = (grunt) ->
         tasks: ["coffee:test"]
 
       compass:
-        files: ["<%= yeoman.app %>/styles/{,*/}*.{scss,sass}"]
+        files: ["<%= yeoman.src %>/sass/{,*/}*.{scss,sass}"]
         tasks: ["compass:server"]
 
     connect:
@@ -46,11 +52,17 @@ module.exports = (grunt) ->
         
         # change this to '0.0.0.0' to access the server from outside
         hostname: "localhost"
+      keepalive:
+        options:
+          keepalive:on
+          livereload:on
+          middleware: (connect)->
+            [mountFolder(connect, "app")]
 
       test:
         options:
           middleware: (connect) ->
-            [mountFolder(connect, ".tmp"), mountFolder(connect, "test")]
+            [mountFolder(connect, ".tmp"), mountFolder(connect, "test"), mountFolder(connect, "app")]
 
     clean:
       dist:
@@ -65,7 +77,29 @@ module.exports = (grunt) ->
       all:
         options:
           specs: "test/spec/{,*/}*.js"
-
+    jade:
+      local:
+          options:
+            pretty: on
+            data :
+              livereload:on
+          files: [
+            expand: true
+            cwd: "<%= yeoman.src %>/jade"
+            src: "{,*/}*.jade"
+            dest: "<%= yeoman.app %>/"
+            ext: ".html"
+          ]
+      dist:
+          options:
+            pretty: on
+          files: [
+            expand: true
+            cwd: "<%= yeoman.src %>/jade"
+            src: "{,*/}*.jade"
+            dest: "<%= yeoman.app %>/"
+            ext: ".html"
+          ]
     coffee:
       dist:
         files: [
@@ -87,7 +121,7 @@ module.exports = (grunt) ->
 
     compass:
       options:
-        sassDir: "<%= yeoman.app %>/styles"
+        sassDir: "<%= yeoman.src %>/sass"
         cssDir: "<%= yeoman.app %>/styles"
         generatedImagesDir: ".tmp/images/generated"
         imagesDir: "<%= yeoman.app %>/images"
@@ -120,7 +154,7 @@ module.exports = (grunt) ->
       options:
         dest: "<%= yeoman.dist %>"
 
-      html: ["<%= yeoman.app %>/popup.html", "<%= yeoman.app %>/options.html"]
+      html: ["<%= yeoman.app %>/popup.html", "<%= yeoman.app %>/options.html", "<%= yeoman.app %>/background.html"]
 
     usemin:
       options:
@@ -184,6 +218,12 @@ module.exports = (grunt) ->
           src: ["*.{ico,png,txt}", "images/{,*/}*.{webp,gif}", "_locales/{,*/}*.json"]
         ,
           expand: true
+          flatten: true
+          cwd: "<%= yeoman.app %>"
+          dest: "<%= yeoman.dist %>/font"
+          src: ["bower_components/font-awesome/font/*"]
+        ,
+          expand: true
           cwd: ".tmp/images"
           dest: "<%= yeoman.dist %>/images"
           src: ["generated/*"]
@@ -192,15 +232,12 @@ module.exports = (grunt) ->
     concurrent:
       server: ["coffee:dist", "compass:server"]
       test: ["coffee", "compass"]
-      dist: ["coffee", "compass:dist", "imagemin", "svgmin", "htmlmin"]
+      dist: ["coffee","jade:dist","compass:dist", "imagemin", "svgmin", "htmlmin"]
 
     chromeManifest:
       dist:
         options:
           buildnumber: true
-          background:
-            target : "scripts/background.js"
-
         src: "<%= yeoman.app %>"
         dest: "<%= yeoman.dist %>"
 
