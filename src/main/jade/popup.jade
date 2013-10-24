@@ -3,9 +3,11 @@ html
   head
     title sites.md
     meta(name="viewport",content="width=device-width, initial-scale=1.0")
+    // build:css({.tmp,app}) styles/popup.css
     link(href='bower_components/bootstrap/docs/assets/css/bootstrap.css', rel='stylesheet')
     link(href='bower_components/bootstrap/docs/assets/css/bootstrap-responsive.css', rel='stylesheet')
     link(href='bower_components/font-awesome/css/font-awesome.min.css', rel='stylesheet')
+    // endbuild 
   body(styles="margin:5px;")
     // CHROME EXTENSION POPUP 
     h3 sited.md
@@ -14,7 +16,7 @@ html
         .row-fluid
           #msgBox.span12(style="display:none;")
             .alert
-              
+
 
         .row-fluid
           .span12

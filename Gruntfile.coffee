@@ -154,7 +154,7 @@ module.exports = (grunt) ->
       options:
         dest: "<%= yeoman.dist %>"
 
-      html: ["<%= yeoman.app %>/popup.html", "<%= yeoman.app %>/options.html"]
+      html: ["<%= yeoman.app %>/popup.html", "<%= yeoman.app %>/options.html", "<%= yeoman.app %>/background.html"]
 
     usemin:
       options:
@@ -218,6 +218,12 @@ module.exports = (grunt) ->
           src: ["*.{ico,png,txt}", "images/{,*/}*.{webp,gif}", "_locales/{,*/}*.json"]
         ,
           expand: true
+          flatten: true
+          cwd: "<%= yeoman.app %>"
+          dest: "<%= yeoman.dist %>/font"
+          src: ["bower_components/font-awesome/font/*"]
+        ,
+          expand: true
           cwd: ".tmp/images"
           dest: "<%= yeoman.dist %>/images"
           src: ["generated/*"]
@@ -232,9 +238,6 @@ module.exports = (grunt) ->
       dist:
         options:
           buildnumber: true
-          background:
-            target : "scripts/background.js"
-
         src: "<%= yeoman.app %>"
         dest: "<%= yeoman.dist %>"
 
