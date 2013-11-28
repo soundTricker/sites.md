@@ -26,7 +26,7 @@ module.exports = (grunt) ->
     yeoman: yeomanConfig
     watch:
       options:
-        livereload:on
+        livereload:1337
         spawn: false
       jade:
         files: ["<%= yeoman.src %>/jade/{,*/}*.jade"]
