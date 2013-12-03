@@ -1,3 +1,15 @@
+'use strict'
+
+angular.module('sites.md', ['ngSanitize','ui.bootstrap'])
+  .run ["$rootScope", ($rootScope)->
+    $rootScope.i18n = (key, args...)->
+      if args.length > 0
+        chrome.i18n.getMessage.apply chrome.i18n, [key].concat(args)
+      else
+        chrome.i18n.getMessage.apply chrome.i18n, [key]
+  ]
+
+
 $toggle = $("#toggle").on "click", ()->
   chrome.tabs.query {active: on, currentWindow: on}, (tabs)->
     chrome.tabs.sendMessage tabs[0].id, cmd: "toggle", (response)->
