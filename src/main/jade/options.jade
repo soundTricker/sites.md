@@ -11,15 +11,15 @@ html(ng-app="sites.md",ng-csp)
     .navbar.navbar-fixed-top.navbar-inverse
       .navbar-inner
         .container-fluid
-          a.brand(href='#') sites.md
+          a.brand(href='#') {{i18n('appName')}}
           ul.nav
             li.active
-              a(href='#') Auto Marknized
+              a(href='#') {{i18n('AutoMarknized')}}
     .container-fluid(ng-controller="OptionsCtrl as main")
       .row-fluid
         .span12
-          h2 Auto marknized setting
-          p Managing Auto marknized setting. If you add new setting, that page is auto marknized at showing.
+          h2 {{i18n('AutoMarknizedSettingHeader')}}
+          p {{i18n('AutoMarknizedSettingLead')}}
       .row-fluid
         .span12
           select.span12(ng-model="main.setting",
@@ -28,49 +28,49 @@ html(ng-app="sites.md",ng-csp)
                         ng-change="main.selectSetting()",
                         ng-keyup="main.delKey($event)"
                         )
-            option(value="") -- create a new auto marknized setting --
+            option(value="") -- {{i18n('CreateNewOption')}} --
       .row-fluid
         .span12
           form.form-horizontal(name="settingForm")
             fieldset
-              legend Setting
+              legend {{i18n('AutoMarknizedSettingLegend')}}
               .control-group
-                label.control-label Name
+                label.control-label {{i18n('Name')}}
                 .controls
                   input.span12(type="text",name="name",ng-model="setting.name", placeholder="Set Auto maknized setting name", required)
               .control-group
-                label.control-label Auto marknized or <br />
-                  | Does not marknized
+                label.control-label {{i18n('AutoMarknized')}} or <br />
+                  | Does not {{i18n('AutoMarknized')}}
                 .controls
                   label.radio
                     input(type="radio",name="auto", placeholder="placeholder", value="on",ng-model="setting.auto", checked)
-                    | Auto marknized
+                    | {{i18n('AutoMarknized')}}
                   label.radio
                     input(type="radio",name="auto", placeholder="placeholder", value="off",ng-model="setting.auto")
-                    | Ignore
+                    | {{i18n('Ignore')}}
               .control-group
-                label.control-label Type
+                label.control-label {{i18n('Type')}}
                 .controls
                   select(name="type", ng-model="setting.type")
                     option(value="url") URL
-                    option(value="contents") Contents
+                    option(value="contents") {{i18n('Contents')}}
               .control-group
-                label.control-label Expression
+                label.control-label　{{i18n('Expression')}}
                 .controls(ng-show="setting.type == 'contents'")
                   select(name="expressionType", ng-model="setting.expressionType", required)
-                    option(value="title") Title
-                    option(value="page_content") Page Content
-                  | contains
+                    option(value="title") {{i18n('Title')}}
+                    option(value="page_content") {{i18n('PageContent')}}
+                  | {{i18n('contains')}}
                   input(type="text", placeholder="text", ng-model="setting.expressionText", required)
                 .controls(ng-show="setting.type == 'url'")
-                  | URL contains
+                  | URL {{i18n('contains')}}
                   input(type="text", placeholder="text", ng-model="setting.expressionText", required)
               .form-actions
-                button.btn(ng-show="!main.setting", ng-disabled="!settingForm.$valid", ng-click="main.add(setting)") Add
-                button.btn(ng-show="main.setting", ng-disabled="!settingForm.$valid", ng-click="main.add(setting)") Copy
-                button.btn(ng-show="main.setting", ng-disabled="!settingForm.$valid", ng-click="main.modify(setting)") Modify
-                button.btn(type="button", ng-show="main.setting", ng-click="main.del()") Delete
-                button.btn(ng-click="main.reset()") Cancel
+                button.btn(ng-show="!main.setting", ng-disabled="!settingForm.$valid", ng-click="main.add(setting)") {{i18n('Add')}}
+                button.btn(ng-show="main.setting", ng-disabled="!settingForm.$valid", ng-click="main.add(setting)") {{i18n('Copy')}}
+                button.btn(ng-show="main.setting", ng-disabled="!settingForm.$valid", ng-click="main.modify(setting)") {{i18n('Modify')}}
+                button.btn(type="button", ng-show="main.setting", ng-click="main.del()") {{i18n('Delete')}}
+                button.btn(ng-click="main.reset()") {{i18n('Cancel')}}
 
     // CHROME EXTENSION OPTION 
     // build:js scripts/options.js 
