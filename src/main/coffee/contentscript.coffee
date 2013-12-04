@@ -53,11 +53,19 @@ toggle = ()->
       $that.data 'origin' , $that.html()
 
     embedMap = {}
+
+
+    # for embed gadgets
     $that.find('.sites-embed').each (index)->
       $embed = $ @
       key = "%%%embed#{index}%%%"
       $embed.before "<div>#{key}</div>"
       embedMap[key] = $embed
+
+    # for image
+    $that.find("img").each (index)->
+      $img = $ @
+      $img.before "![#{$img.attr('alt')}](#{$img.attr('src')})"
 
     result = marked $that[0].innerText
     list = []
