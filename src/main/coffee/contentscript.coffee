@@ -59,9 +59,16 @@ toggle = ()->
     # for embed gadgets
     $that.find('.sites-embed').each (index)->
       $embed = $ @
+
+      if $embed.find(".goog-toc").length > 0
+        $embed.before "<div>[TOC]</div>"
+        $embed.remove()
+        return
+
       key = "%%%embed#{index}%%%"
       $embed.before "<div>#{key}</div>"
-      embedMap[key] = $embed
+      embedMap[key] = $embed.clone(true)
+      $embed.remove()
 
     # for image
     $that.find("img").each (index)->
