@@ -23,8 +23,9 @@ chrome.runtime.sendMessage {cmd : "get" , name : "settings"} , (result)->
 marked.setOptions
   gfm: true
   highlight: (code, lang)->
-    return code if !lang || !hljs
-    return hljs.highlight(lang, code).value
+    return code if !code || !hljs
+    return hljs.highlight(lang, code).value if lang
+    return hljs.highlightAuto(code).value
   tables: true
   breaks: true
   pedantic: false
